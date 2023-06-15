@@ -4,7 +4,7 @@
 # this tep[late is designed to be used in conjunction with a 'kubectl apply' command
 # this template is designed to be used with services using the dapr runtime. The dapr runtime creates a service exposing a port called dapr-metrics (9090)
 # dapr services also have a dapr.io/enabled: 'true'label
-Usage: kubectl apply -f service-monitor-dapr.yaml -n <service monitor namespace>
+# Usage: kubectl apply -f service-monitor-dapr.yaml -n <service monitor namespace>
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
