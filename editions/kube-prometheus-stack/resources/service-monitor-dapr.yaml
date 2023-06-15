@@ -1,0 +1,30 @@
+# This is a simpe template to provide an example for provisioning a custom service monitor for use in the kube-prometheus-stack.
+# this stack provides a number of servicemonitors out of the box but you will need to create additional servicemonitors if you wish to extend this installation to scrape metrics from your own services.
+# As this installation uses an Operator, the normal method - i.e. applying additionalScrapeConfigs will not work.
+# this tep[late is designed to be used in conjunction with a 'kubectl apply' command
+# this template is designed to be used with services using the dapr runtime. The dapr runtime creates a service exposing a port called dapr-metrics (9090)
+# dapr services also have a dapr.io/enabled: 'true'label
+Usage: kubectl apply -f service-monitor-dapr.yaml -n <service monitor namespace>
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: <the name for your service monitor>
+  namespace: <the namespace your service monitor will be deployed to>
+  labels:
+    app.kubernetes.io/instance: prometheus-community
+    release: prometheus-community
+spec:
+  endpoints:
+  - honorLabels: true
+    port: dapr-metrics
+    scrapeTimeout: 30s
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true    
+  jobLabel: <the job name for the Prometheus service>
+  namespaceSelector:
+    matchNames:
+    - <namespace(s) where your dapr service is running> 
+  selector:
+    matchLabels:
+      dapr.io/enabled: 'true'
